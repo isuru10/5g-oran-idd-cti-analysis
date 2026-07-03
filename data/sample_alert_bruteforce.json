@@ -1,0 +1,27 @@
+{
+  "alert_id": "ALERT-5G-2026-0004-BRUTEFORCE",
+  "detection_timestamp": "2026-07-03T13:31:01Z",
+  "affected_network_component": "O-Cloud Edge Server (Management Plane / Remote Shell Access)",
+  "predicted_threat_class": "bruteforce",
+  "prediction_confidence": 0.96,
+  "alternative_predictions": {
+    "benign": 0.02,
+    "ddos": 0.01,
+    "probe": 0.01
+  },
+  "network_observations": {
+    "ip_proto": 6,
+    "proto": "tcp",
+    "service": "ssl",
+    "conn_state": "RSTR",
+    "duration": 16.611599,
+    "src_bytes": 12850,
+    "dst_bytes": 3891,
+    "missed_bytes": 0,
+    "src_pkts": 40,
+    "dst_pkts": 48,
+    "src_ip_bytes": 27326,
+    "dst_ip_bytes": 9726,
+    "history": "ShADTadtfTrrr"
+  }
+}

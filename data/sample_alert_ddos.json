@@ -1,0 +1,26 @@
+{
+  "alert_id": "ALERT-5G-2026-0002-DDOS",
+  "detection_timestamp": "2026-07-03T13:31:01Z",
+  "affected_network_component": "O-CU (Central Unit User/Control Plane) & UPF (User Plane Function)",
+  "predicted_threat_class": "ddos",
+  "prediction_confidence": 0.9933,
+  "alternative_predictions": {
+    "dos": 0.0024,
+    "probe": 0.0041
+  },
+  "network_observations": {
+    "ip_proto": 6,
+    "proto": "tcp",
+    "service": "none",
+    "conn_state": "S1",
+    "duration": 8.8e-05,
+    "src_bytes": 0,
+    "dst_bytes": 0,
+    "missed_bytes": 0,
+    "src_pkts": 1,
+    "dst_pkts": 1,
+    "src_ip_bytes": 40,
+    "dst_ip_bytes": 44,
+    "history": "Sh"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "alert_id": "ALERT-5G-2026-0005-WEB",
+  "detection_timestamp": "2026-07-03T13:31:01Z",
+  "affected_network_component": "Near-RT RIC (RAN Intelligent Controller) Management Dashboard / API",
+  "predicted_threat_class": "web",
+  "prediction_confidence": 1.0,
+  "alternative_predictions": {},
+  "network_observations": {
+    "ip_proto": 6,
+    "proto": "tcp",
+    "service": "http",
+    "conn_state": "SF",
+    "duration": 0.154383,
+    "src_bytes": 138,
+    "dst_bytes": 686,
+    "missed_bytes": 0,
+    "src_pkts": 12,
+    "dst_pkts": 10,
+    "src_ip_bytes": 916,
+    "dst_ip_bytes": 1908,
+    "history": "ShADTadtfF"
+  }
+}

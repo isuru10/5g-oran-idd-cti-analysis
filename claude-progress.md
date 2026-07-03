@@ -5,9 +5,9 @@ This log tracks all agent sessions, features completed, and verification outcome
 ---
 
 ## Active Status
-- **Current Phase:** Phase 1 (Data Engineering & Baseline Model Validation)
-- **Active Feature:** F-01 & F-02 (Reformatted File Structure & Scaffolding)
-- **Status:** Complete (Verified via `init.sh` and notebook run)
+- **Current Phase:** Phase 2 (Generate and Enrich CTI Alerts)
+- **Active Feature:** F-03 (Structured CTI Alert Generation)
+- **Status:** Complete (JSON alerts generated and verified)
 
 ---
 
@@ -30,8 +30,17 @@ This log tracks all agent sessions, features completed, and verification outcome
   - Verified environment health using `./init.sh`.
 - **Status:** Harness files complete and fully verified.
 
+### Session 3: 2026-07-03T13:30Z
+- **Objective:** Design and implement F-03: Structured CTI Alert Generation.
+- **Accomplishments:**
+  - Designed mapping of O-RAN classes to affected architectural components (e.g. `bruteforce` -> `O-Cloud Edge Server`, `dos`/`ddos` -> `O-CU & UPF`, `web` -> `Near-RT RIC`).
+  - Implemented `src/cti_alert_generator.py` to parse prediction test records and generate structured CTI alerts in JSON format.
+  - Generated and verified alerts for `dos`, `ddos`, `probe`, `bruteforce`, and `web` saved in `data/sample_alert_*.json`.
+  - Enforced security boundary checks confirming the true labels are not leaked in the CTI alerts.
+- **Status:** Complete and verified.
+
 ---
 
 ## Next Steps for the Next Session
-1. **F-03 (Structured CTI Alert Generation):** Implement a script to parse `data/cti_test_events.csv` and generate formatted markdown/JSON security alerts for LLM processing.
-2. **F-04 (LLM Enrichment Integration):** Connect to local LLM or API endpoints to enrich alerts with mitigation recommendations.
+1. **F-04 (LLM-assisted Threat Intelligence Enrichment):** Implement the local LLM prompting pipeline (Ollama/hosted LLM) to consume JSON alerts and output structured incident reports.
+2. **F-05 (SHAP Explainability and Feature Importance):** Integrate SHAP analysis into the alert generator and LLM prompt.

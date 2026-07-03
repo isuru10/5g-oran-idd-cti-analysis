@@ -31,9 +31,16 @@
       "id": "F-03",
       "name": "Structured CTI Alert Generation",
       "description": "Map predicted events to structured JSON/Markdown alerts detailing confidence, feature significance, and classification status for LLM processing.",
-      "status": "pending",
+      "status": "completed",
       "last_updated": "2026-07-03",
-      "evidence": []
+      "evidence": [
+        "src/cti_alert_generator.py",
+        "data/sample_alert_dos.json",
+        "data/sample_alert_ddos.json",
+        "data/sample_alert_probe.json",
+        "data/sample_alert_bruteforce.json",
+        "data/sample_alert_web.json"
+      ]
     },
     {
       "id": "F-04",

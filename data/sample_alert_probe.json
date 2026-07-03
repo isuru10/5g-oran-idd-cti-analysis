@@ -1,0 +1,26 @@
+{
+  "alert_id": "ALERT-5G-2026-0003-PROBE",
+  "detection_timestamp": "2026-07-03T13:31:01Z",
+  "affected_network_component": "O-RAN E2/O1 Interface (Near-RT RIC Discovery)",
+  "predicted_threat_class": "probe",
+  "prediction_confidence": 0.9854,
+  "alternative_predictions": {
+    "bruteforce": 0.0105,
+    "dos": 0.0022
+  },
+  "network_observations": {
+    "ip_proto": 17,
+    "proto": "udp",
+    "service": "none",
+    "conn_state": "S0",
+    "duration": 0.0,
+    "src_bytes": 0,
+    "dst_bytes": 0,
+    "missed_bytes": 0,
+    "src_pkts": 2,
+    "dst_pkts": 0,
+    "src_ip_bytes": 136,
+    "dst_ip_bytes": 0,
+    "history": "D"
+  }
+}
