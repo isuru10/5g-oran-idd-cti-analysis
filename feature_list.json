@@ -89,6 +89,16 @@
         "src/static/style.css",
         "src/static/script.js"
       ]
+    },
+    {
+      "id": "F-07",
+      "name": "Comprehensive Final Report",
+      "description": "Write a 6-page final report detailing the methodology, ML results, SHAP integration, and LLM analysis quality for the pipeline.",
+      "status": "completed",
+      "last_updated": "2026-07-03",
+      "evidence": [
+        "report.md"
+      ]
     }
   ]
 }
