@@ -39,7 +39,7 @@ fi
 # 3. Check Required Python Packages
 echo "Checking Python package dependencies..."
 $PYTHON_PATH -c "
-libs = ['pandas', 'numpy', 'sklearn', 'imblearn', 'joblib', 'matplotlib', 'seaborn', 'sqlite3', 'shap', 'pypdf']
+libs = ['pandas', 'numpy', 'sklearn', 'imblearn', 'joblib', 'matplotlib', 'seaborn', 'sqlite3', 'shap', 'pypdf', 'flask']
 missing = []
 for lib in libs:
     try:

@@ -76,6 +76,19 @@
         "data/incident_report_bruteforce_shap.md",
         "data/incident_report_web_shap.md"
       ]
+    },
+    {
+      "id": "F-06",
+      "name": "Interactive Demonstration Web Interface",
+      "description": "A web application that demonstrates the complete ML threat prediction and LLM explanation pipeline.",
+      "status": "completed",
+      "last_updated": "2026-07-03",
+      "evidence": [
+        "src/app.py",
+        "src/templates/index.html",
+        "src/static/style.css",
+        "src/static/script.js"
+      ]
     }
   ]
 }
