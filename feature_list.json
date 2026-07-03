@@ -46,9 +46,16 @@
       "id": "F-04",
       "name": "LLM-assisted Threat Intelligence Enrichment",
       "description": "Feed structured alerts to a local/remote LLM to generate rich cyber threat intelligence reports, hazard assessments, and mitigation recommendations.",
-      "status": "pending",
+      "status": "completed",
       "last_updated": "2026-07-03",
-      "evidence": []
+      "evidence": [
+        "src/cti_enrichment_llm.py",
+        "data/incident_report_dos.md",
+        "data/incident_report_ddos.md",
+        "data/incident_report_probe.md",
+        "data/incident_report_bruteforce.md",
+        "data/incident_report_web.md"
+      ]
     },
     {
       "id": "F-05",
