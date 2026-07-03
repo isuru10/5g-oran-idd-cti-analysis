@@ -1,6 +1,3 @@
-data/Network_Dataset.db
-data/Lower_Layer_Data.db
-models/random_forest_model.joblib
 
 # Python build and cache files
 __pycache__/
