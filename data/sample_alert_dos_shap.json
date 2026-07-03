@@ -1,0 +1,56 @@
+{
+  "alert_id": "ALERT-5G-2026-0001-DOS",
+  "detection_timestamp": "2026-07-03T13:31:01Z",
+  "affected_network_component": "O-CU (Central Unit User/Control Plane) & UPF (User Plane Function)",
+  "predicted_threat_class": "dos",
+  "prediction_confidence": 0.7607,
+  "alternative_predictions": {
+    "ddos": 0.0805,
+    "probe": 0.1581
+  },
+  "network_observations": {
+    "ip_proto": 6,
+    "proto": "tcp",
+    "service": "none",
+    "conn_state": "REJ",
+    "duration": 0.000115,
+    "src_bytes": 0,
+    "dst_bytes": 0,
+    "missed_bytes": 0,
+    "src_pkts": 2,
+    "dst_pkts": 2,
+    "src_ip_bytes": 80,
+    "dst_ip_bytes": 80,
+    "history": "Sr"
+  },
+  "shap_evidence": {
+    "top_features": [
+      {
+        "feature": "src_ip_bytes",
+        "shap_value": 0.1440356967838575,
+        "direction": "positive_contribution"
+      },
+      {
+        "feature": "conn_state",
+        "shap_value": 0.14071250680903655,
+        "direction": "positive_contribution"
+      },
+      {
+        "feature": "history",
+        "shap_value": 0.09833743859964644,
+        "direction": "positive_contribution"
+      },
+      {
+        "feature": "dst_bytes",
+        "shap_value": 0.052663562358350575,
+        "direction": "positive_contribution"
+      },
+      {
+        "feature": "dst_ip_bytes",
+        "shap_value": 0.04174310174714219,
+        "direction": "positive_contribution"
+      }
+    ],
+    "evidence_summary": "Prediction driven by: src_ip_bytes (0.1440), conn_state (0.1407), history (0.0983), dst_bytes (0.0527), dst_ip_bytes (0.0417)"
+  }
+}

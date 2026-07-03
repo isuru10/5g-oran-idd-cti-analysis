@@ -1,0 +1,56 @@
+{
+  "alert_id": "ALERT-5G-2026-0003-PROBE",
+  "detection_timestamp": "2026-07-03T13:31:01Z",
+  "affected_network_component": "O-RAN E2/O1 Interface (Near-RT RIC Discovery)",
+  "predicted_threat_class": "probe",
+  "prediction_confidence": 0.9854,
+  "alternative_predictions": {
+    "bruteforce": 0.0105,
+    "dos": 0.0022
+  },
+  "network_observations": {
+    "ip_proto": 17,
+    "proto": "udp",
+    "service": "none",
+    "conn_state": "S0",
+    "duration": 0.0,
+    "src_bytes": 0,
+    "dst_bytes": 0,
+    "missed_bytes": 0,
+    "src_pkts": 2,
+    "dst_pkts": 0,
+    "src_ip_bytes": 136,
+    "dst_ip_bytes": 0,
+    "history": "D"
+  },
+  "shap_evidence": {
+    "top_features": [
+      {
+        "feature": "src_pkts",
+        "shap_value": 0.11852752135803046,
+        "direction": "positive_contribution"
+      },
+      {
+        "feature": "dst_ip_bytes",
+        "shap_value": 0.08891748353567712,
+        "direction": "positive_contribution"
+      },
+      {
+        "feature": "src_ip_bytes",
+        "shap_value": 0.08664116525414746,
+        "direction": "positive_contribution"
+      },
+      {
+        "feature": "proto",
+        "shap_value": 0.0737104315074094,
+        "direction": "positive_contribution"
+      },
+      {
+        "feature": "dst_bytes",
+        "shap_value": 0.07343105641759595,
+        "direction": "positive_contribution"
+      }
+    ],
+    "evidence_summary": "Prediction driven by: src_pkts (0.1185), dst_ip_bytes (0.0889), src_ip_bytes (0.0866), proto (0.0737), dst_bytes (0.0734)"
+  }
+}

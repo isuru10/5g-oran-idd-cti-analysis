@@ -5,9 +5,9 @@ This log tracks all agent sessions, features completed, and verification outcome
 ---
 
 ## Active Status
-- **Current Phase:** Phase 2 (Generate and Enrich CTI Alerts)
-- **Active Feature:** F-04 (LLM-assisted Threat Intelligence Enrichment)
-- **Status:** Complete (Incident reports generated and verified)
+- **Current Phase:** Phase 3 (Explanation-Led CTI Assessment)
+- **Active Feature:** F-05 (SHAP Explainability and Feature Importance)
+- **Status:** Complete (SHAP-enriched alerts and explanation-led incident reports generated and verified)
 
 ---
 
@@ -48,7 +48,16 @@ This log tracks all agent sessions, features completed, and verification outcome
   - Configured a template-based fallback generator to guarantee pipeline execution in the event of network/rate-limiting drops.
 - **Status:** Complete and verified.
 
+### Session 5: 2026-07-03T15:08Z
+- **Objective:** Design and implement F-05: SHAP Explainability and Feature Importance.
+- **Accomplishments:**
+  - Implemented `src/cti_shap_explain.py` to calculate SHAP feature values for predictions using `shap.TreeExplainer`.
+  - Successfully generated and exported 5 SHAP-enriched JSON alerts (`data/sample_alert_*_shap.json`) detailing contributing features and evidence.
+  - Created a prompt enforcing the model to reference SHAP evidence to justify severity assignments and containment responses.
+  - Querying Ollama (`gpt-oss:20b-cloud`) exported 5 detailed explanation-led reports (`data/incident_report_*_shap.md`).
+- **Status:** Complete and verified.
+
 ---
 
 ## Next Steps for the Next Session
-1. **F-05 (SHAP Explainability and Feature Importance):** Integrate SHAP analysis into the alert generator and LLM prompt to enable explanation-led CTI reports.
+1. **Pipeline Hardening:** Finalize integration tests across the entire pipeline.

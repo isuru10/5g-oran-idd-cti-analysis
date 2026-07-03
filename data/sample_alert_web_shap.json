@@ -1,0 +1,53 @@
+{
+  "alert_id": "ALERT-5G-2026-0005-WEB",
+  "detection_timestamp": "2026-07-03T13:31:01Z",
+  "affected_network_component": "Near-RT RIC (RAN Intelligent Controller) Management Dashboard / API",
+  "predicted_threat_class": "web",
+  "prediction_confidence": 1.0,
+  "alternative_predictions": {},
+  "network_observations": {
+    "ip_proto": 6,
+    "proto": "tcp",
+    "service": "http",
+    "conn_state": "SF",
+    "duration": 0.154383,
+    "src_bytes": 138,
+    "dst_bytes": 686,
+    "missed_bytes": 0,
+    "src_pkts": 12,
+    "dst_pkts": 10,
+    "src_ip_bytes": 916,
+    "dst_ip_bytes": 1908,
+    "history": "ShADTadtfF"
+  },
+  "shap_evidence": {
+    "top_features": [
+      {
+        "feature": "http_status_error",
+        "shap_value": -0.07490838593335036,
+        "direction": "negative_contribution"
+      },
+      {
+        "feature": "files_total_bytes",
+        "shap_value": -0.058193656759357365,
+        "direction": "negative_contribution"
+      },
+      {
+        "feature": "is_GET_mthd",
+        "shap_value": -0.054407542095578354,
+        "direction": "negative_contribution"
+      },
+      {
+        "feature": "is_file_transfered",
+        "shap_value": -0.039117507868014,
+        "direction": "negative_contribution"
+      },
+      {
+        "feature": "dst_bytes",
+        "shap_value": 0.024999203060205265,
+        "direction": "positive_contribution"
+      }
+    ],
+    "evidence_summary": "Prediction driven by: http_status_error (-0.0749), files_total_bytes (-0.0582), is_GET_mthd (-0.0544), is_file_transfered (-0.0391), dst_bytes (0.0250)"
+  }
+}

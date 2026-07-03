@@ -61,9 +61,21 @@
       "id": "F-05",
       "name": "SHAP Explainability and Feature Importance",
       "description": "Compute and visualize SHAP values for model predictions to provide explainable threat intelligence reporting.",
-      "status": "pending",
+      "status": "completed",
       "last_updated": "2026-07-03",
-      "evidence": []
+      "evidence": [
+        "src/cti_shap_explain.py",
+        "data/sample_alert_dos_shap.json",
+        "data/sample_alert_ddos_shap.json",
+        "data/sample_alert_probe_shap.json",
+        "data/sample_alert_bruteforce_shap.json",
+        "data/sample_alert_web_shap.json",
+        "data/incident_report_dos_shap.md",
+        "data/incident_report_ddos_shap.md",
+        "data/incident_report_probe_shap.md",
+        "data/incident_report_bruteforce_shap.md",
+        "data/incident_report_web_shap.md"
+      ]
     }
   ]
 }
