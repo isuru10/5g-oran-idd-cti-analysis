@@ -57,7 +57,7 @@ Please provide the incident report containing:
 """
     return prompt
 
-def query_ollama(prompt, model="gpt-oss:20b-cloud", host="http://localhost:11434"):
+def query_ollama(prompt, model="gemma3:4b-cloud", host="http://localhost:11434"):
     """Sends request to local Ollama API wrapper."""
     url = f"{host}/api/generate"
     data = {
@@ -156,7 +156,7 @@ def main():
     print("SHAP TreeExplainer initialized.")
     
     classes = ['dos', 'ddos', 'probe', 'bruteforce', 'web']
-    available_models = ["gpt-oss:20b-cloud", "llama3", "qwen2.5", "mistral"]
+    available_models = ["gemma3:4b-cloud", "llama3", "qwen2.5", "mistral"]
     
     for cls in classes:
         print(f"\n--- Calculating SHAP & Generating Explanation-Led Alert for: '{cls}' ---")

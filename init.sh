@@ -154,12 +154,12 @@ echo "Checking Ollama service and cloud model availability..."
 if command -v ollama >/dev/null 2>&1; then
     if curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
         echo -e "  ${GREEN}[OK]${NC} Ollama daemon is running on port 11434."
-        if ollama list | grep -q "gpt-oss:20b-cloud"; then
-            echo -e "  ${GREEN}[OK]${NC} Cloud model 'gpt-oss:20b-cloud' is registered and available."
+        if ollama list | grep -q "gemma3:4b-cloud"; then
+            echo -e "  ${GREEN}[OK]${NC} Cloud model 'gemma3:4b-cloud' is registered and available."
             echo -e "${GREEN}[PASS]${NC} Ollama integration checks complete."
         else
-            echo -e "  ${RED}[MISSING]${NC} Model 'gpt-oss:20b-cloud' not found in ollama list."
-            echo -e "${RED}[WARNING]${NC} Pull the cloud model by running: ollama pull gpt-oss:20b-cloud"
+            echo -e "  ${RED}[MISSING]${NC} Model 'gemma3:4b-cloud' not found in ollama list."
+            echo -e "${RED}[WARNING]${NC} Pull the cloud model by running: ollama pull gemma3:4b-cloud"
         fi
     else
         echo -e "  ${RED}[OFFLINE]${NC} Ollama daemon is offline or port 11434 is closed."

@@ -19,7 +19,7 @@ This project bridges that gap by implementing a pipeline that:
 The platform provides the following core capabilities:
 - **Data Engineering:** Applies hybrid sampling (SMOTE) to balance heavily skewed classes (`benign`, `bruteforce`, `ddos`, `dos`, `probe`, `web`).
 - **Machine Learning:** Utilizes a Random Forest classifier achieving **91.66% overall accuracy**.
-- **LLM Enrichment:** Integrates local `gpt-oss:20b-cloud` (via Ollama API) to transform technical observations into structured Incident Reports mapped to MITRE ATT&CK.
+- **LLM Enrichment:** Integrates local `gemma3:4b-cloud` (via Ollama API) to transform technical observations into structured Incident Reports mapped to MITRE ATT&CK.
 - **Explainable AI:** Uses `shap.TreeExplainer` to anchor the LLM's severity assessments to actual network feature metrics, ensuring transparent, evidence-based reporting.
 - **Interactive Web Demo:** Features a Flask-based demonstration dashboard to simulate SOC workflows, strictly isolating "ground truth" labels from the LLM prompt to ensure evaluation integrity.
 

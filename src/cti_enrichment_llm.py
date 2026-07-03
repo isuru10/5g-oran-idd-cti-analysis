@@ -44,7 +44,7 @@ Please provide the incident report containing:
 """
     return prompt
 
-def query_ollama(prompt, model="gpt-oss:20b-cloud", host="http://localhost:11434"):
+def query_ollama(prompt, model="gemma3:4b-cloud", host="http://localhost:11434"):
     """Sends a generate request to the local Ollama API endpoint."""
     url = f"{host}/api/generate"
     data = {
@@ -151,7 +151,7 @@ def main():
     out_dir = "../data" if os.path.exists("../data") else "data"
     
     # Attempt to query local Ollama models in priority order
-    available_models = ["gpt-oss:20b-cloud", "llama3", "qwen2.5", "mistral"]
+    available_models = ["gemma3:4b-cloud", "llama3", "qwen2.5", "mistral"]
     
     for cls in classes:
         print(f"\nProcessing Alert for Class: '{cls}'")

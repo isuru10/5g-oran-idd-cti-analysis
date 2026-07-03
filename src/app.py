@@ -103,17 +103,6 @@ def analyze():
     if not event:
         return jsonify({"error": "No event provided"}), 400
         
-    predicted_label = event['predicted_label']
-    confidence = float(event['confidence'])
-    affected_component = COMPONENT_MAPPING.get(predicted_label, "O-Cloud Network Infrastructure")
-    
-    alternatives = {}
-    for k, v in event.items():
-        if k.startswith('prob_'):
-            label_name = k.replace('prob_', '')
-            if label_name != predicted_label and float(v) > 0.001:
-                alternatives[label_name] = round(float(v), 4)
-                
     observations = {
         "ip_proto": int(event.get("ip_proto", 0) or 0),
         "proto": str(event.get("proto", "unknown") or "unknown"),
@@ -127,20 +116,15 @@ def analyze():
         "dst_pkts": int(event.get("dst_pkts", 0) or 0),
         "src_ip_bytes": int(event.get("src_ip_bytes", 0) or 0),
         "dst_ip_bytes": int(event.get("dst_ip_bytes", 0) or 0),
-        "history": str(event.get("history", "none") or "none")
+        "history": str(event.get("history", "none") or "none"),
+        "http_trans_depth": int(event.get("http_trans_depth", 0) or 0),
+        "files_total_bytes": int(event.get("files_total_bytes", 0) or 0),
+        "is_GET_mthd": int(event.get("is_GET_mthd", 0) or 0),
+        "http_status_error": int(event.get("http_status_error", 0) or 0),
+        "is_file_transfered": int(event.get("is_file_transfered", 0) or 0)
     }
     
-    alert = {
-        "alert_id": f"ALERT-5G-DEMO-{predicted_label.upper()}",
-        "detection_timestamp": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
-        "affected_network_component": affected_component,
-        "predicted_threat_class": predicted_label,
-        "prediction_confidence": round(confidence, 4),
-        "alternative_predictions": alternatives,
-        "network_observations": observations
-    }
-    
-    # SHAP Generation
+    # 1. Feature Preprocessing
     obs_numeric = {}
     for col in FEATURE_ORDER:
         val = observations.get(col)
@@ -154,8 +138,34 @@ def analyze():
         X_df[col] = pd.to_numeric(X_df[col], errors='coerce').fillna(0)
         
     X_scaled = scaler.transform(X_df)
-    shap_vals = explainer.shap_values(X_scaled)
     
+    # 2. Real-time ML Inference
+    pred_idx = int(rf_model.predict(X_scaled)[0])
+    probs = rf_model.predict_proba(X_scaled)[0]
+    
+    predicted_label = target_mapping['reverse'][pred_idx]
+    confidence = float(probs[pred_idx])
+    
+    alternatives = {}
+    for idx, prob in enumerate(probs):
+        if idx != pred_idx and prob > 0.001:
+            alt_label = target_mapping['reverse'][idx]
+            alternatives[alt_label] = round(float(prob), 4)
+            
+    affected_component = COMPONENT_MAPPING.get(predicted_label, "O-Cloud Network Infrastructure")
+    
+    alert = {
+        "alert_id": f"ALERT-5G-DEMO-{predicted_label.upper()}",
+        "detection_timestamp": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
+        "affected_network_component": affected_component,
+        "predicted_threat_class": predicted_label,
+        "prediction_confidence": round(confidence, 4),
+        "alternative_predictions": alternatives,
+        "network_observations": observations
+    }
+    
+    # 3. SHAP Generation
+    shap_vals = explainer.shap_values(X_scaled)
     class_idx = target_mapping['mapping'][predicted_label]
     if isinstance(shap_vals, list):
         inst_shap = shap_vals[class_idx][0]
@@ -188,7 +198,7 @@ def generate_report():
     alert = request.json.get('alert', {})
     prompt = build_shap_prompt(alert)
     
-    model = "gpt-oss:20b-cloud"
+    model = "gemma3:4b-cloud"
     host = "http://localhost:11434"
     url = f"{host}/api/generate"
     data = {

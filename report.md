@@ -31,7 +31,7 @@ Predicted events were processed to generate structured JSON CTI alerts. To maint
 *   `probe` $\rightarrow$ Management Interfaces (O-AM)
 
 ### 2.4 LLM Configuration and Threat Knowledge
-For the CTI enrichment, we deployed `gpt-oss:20b-cloud` locally via the Ollama API. We utilized a rigid, instruction-tuned prompt that instructed the LLM to act as a Senior 5G Telecom Security Analyst. The prompt included contextual O-RAN knowledge, forcing the LLM to structure its output into standard sections: Incident Context, Threat Correlation (MITRE ATT&CK), Severity Assessment, Operational Impact, and Mitigation Directives.
+For the CTI enrichment, we deployed `gemma3:4b-cloud` locally via the Ollama API. We utilized a rigid, instruction-tuned prompt that instructed the LLM to act as a Senior 5G Telecom Security Analyst. The prompt included contextual O-RAN knowledge, forcing the LLM to structure its output into standard sections: Incident Context, Threat Correlation (MITRE ATT&CK), Severity Assessment, Operational Impact, and Mitigation Directives.
 
 ## 3. Results
 
@@ -57,7 +57,7 @@ The structured alerts effectively captured the primary prediction, confidence sc
 ## 4. Discussion
 
 ### 4.1 LLM Output Quality
-The `gpt-oss:20b-cloud` model produced highly actionable and professional incident reports. The model successfully contextualized the structured alerts, accurately mapped them to MITRE ATT&CK tactics (e.g., T1498 for Network Denial of Service), and provided concrete mitigations such as implementing rate-limiting in the O-CU layer or updating xApp firewall rules. 
+The `gemma3:4b-cloud` model produced highly actionable and professional incident reports. The model successfully contextualized the structured alerts, accurately mapped them to MITRE ATT&CK tactics (e.g., T1498 for Network Denial of Service), and provided concrete mitigations such as implementing rate-limiting in the O-CU layer or updating xApp firewall rules. 
 
 ### 4.2 Limitations and Hallucination Risks
 One primary risk observed with generative LLMs in security is the tendency to hallucinate specific IP addresses or threat actor groups when none are provided. To mitigate this, our prompt explicitly forbade the invention of unobserved indicators. However, the LLM occasionally provided overly generalized mitigations that, while correct, lacked the strict technical specificity a seasoned O-RAN engineer might desire.
