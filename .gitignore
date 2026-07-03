@@ -6,3 +6,7 @@ __pycache__/
 *.pyd
 .ipynb_checkpoints/
 .pytest_cache/
+
+# Instructions
+Code Exercise_ LLM-Assisted Cyber Threat Intelligence for 5G O-RAN Security.pdf
+pdf_text.txt
