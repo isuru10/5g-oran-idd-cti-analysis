@@ -74,6 +74,15 @@ This log tracks all agent sessions, features completed, and verification outcome
   - Marked F-06 as complete in feature list and task trackers.
 - **Status:** Complete and verified.
 
+### Session 8: 2026-07-03T17:45Z
+- **Objective:** Display true label in event dropdown, alert panel, and report panel, while withholding it from the LLM prompt.
+- **Accomplishments:**
+  - Updated `src/app.py` to include `true_threat_class` in `/api/analyze` and pop it in `/api/generate_report` to ensure LLM prompt purity.
+  - Modified `src/templates/index.html` to add prediction and true label badges, report metadata headers, and explicit LLM data-withholding disclaimers.
+  - Updated `src/static/script.js` to render true labels in the dropdown selection options, alert badges, and report metadata.
+  - Verified logic using a custom integration script calling Flask endpoints locally (events, analyze, and report generation).
+- **Status:** Complete and verified.
+
 ---
 
 ## Next Steps for the Next Session

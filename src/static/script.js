@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             events.forEach((evt, idx) => {
                 const opt = document.createElement('option');
                 opt.value = idx;
-                opt.textContent = `Event [${evt.predicted_label.toUpperCase()}] - ${evt.proto} / ${evt.service} / ${evt.src_bytes} bytes`;
+                opt.textContent = `Event [Pred: ${evt.predicted_label.toUpperCase()}, True: ${evt.true_label.toUpperCase()}] - ${evt.proto} / ${evt.service} / ${evt.src_bytes} bytes`;
                 eventSelect.appendChild(opt);
             });
             eventSelect.addEventListener('change', () => {
@@ -78,6 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderAlert(alert) {
         // Basic info
         document.getElementById('threatBadge').textContent = alert.predicted_threat_class.toUpperCase();
+        document.getElementById('trueBadge').textContent = alert.true_threat_class.toUpperCase();
+        document.getElementById('reportTrueLabel').textContent = alert.true_threat_class.toUpperCase();
         document.getElementById('targetComponent').textContent = alert.affected_network_component;
         
         // Confidence bar
