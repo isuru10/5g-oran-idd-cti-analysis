@@ -1,0 +1,55 @@
+{
+  "project": "5G O-RAN Threat Detection & CTI Enrichment",
+  "version": "1.0.0",
+  "features": [
+    {
+      "id": "F-01",
+      "name": "Data Engineering, Preprocessing & SMOTE Balancing",
+      "description": "Extract raw SQLite higher-layer network log dataset, clean host identifiers, map protocols/categories, and balance classes using SMOTE.",
+      "status": "completed",
+      "last_updated": "2026-07-03",
+      "evidence": [
+        "src/exploratory_analysis.ipynb",
+        "models/encoding_mappings.joblib",
+        "models/target_mapping.joblib"
+      ]
+    },
+    {
+      "id": "F-02",
+      "name": "Baseline Multi-class Machine Learning Classifier",
+      "description": "Train a standard Random Forest multi-class classifier on scaled, SMOTE-balanced O-RAN logs to serve as a baseline threat detector.",
+      "status": "completed",
+      "last_updated": "2026-07-03",
+      "evidence": [
+        "models/random_forest_model.joblib",
+        "models/scaler.joblib",
+        "models/confusion_matrix.png",
+        "data/cti_test_events.csv"
+      ]
+    },
+    {
+      "id": "F-03",
+      "name": "Structured CTI Alert Generation",
+      "description": "Map predicted events to structured JSON/Markdown alerts detailing confidence, feature significance, and classification status for LLM processing.",
+      "status": "pending",
+      "last_updated": "2026-07-03",
+      "evidence": []
+    },
+    {
+      "id": "F-04",
+      "name": "LLM-assisted Threat Intelligence Enrichment",
+      "description": "Feed structured alerts to a local/remote LLM to generate rich cyber threat intelligence reports, hazard assessments, and mitigation recommendations.",
+      "status": "pending",
+      "last_updated": "2026-07-03",
+      "evidence": []
+    },
+    {
+      "id": "F-05",
+      "name": "SHAP Explainability and Feature Importance",
+      "description": "Compute and visualize SHAP values for model predictions to provide explainable threat intelligence reporting.",
+      "status": "pending",
+      "last_updated": "2026-07-03",
+      "evidence": []
+    }
+  ]
+}

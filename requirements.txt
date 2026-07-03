@@ -1,0 +1,7 @@
+ipykernel
+pandas
+imbalanced-learn
+seaborn
+matplotlib
+scikit-learn
+joblib
