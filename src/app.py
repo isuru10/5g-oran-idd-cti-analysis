@@ -135,7 +135,6 @@ def analyze():
         "detection_timestamp": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
         "affected_network_component": affected_component,
         "predicted_threat_class": predicted_label,
-        "true_threat_class": str(event.get("true_label", predicted_label)),
         "prediction_confidence": round(confidence, 4),
         "alternative_predictions": alternatives,
         "network_observations": observations
@@ -187,8 +186,6 @@ def analyze():
 @app.route('/api/generate_report', methods=['POST'])
 def generate_report():
     alert = request.json.get('alert', {})
-    if isinstance(alert, dict):
-        alert.pop('true_threat_class', None)
     prompt = build_shap_prompt(alert)
     
     model = "gpt-oss:20b-cloud"

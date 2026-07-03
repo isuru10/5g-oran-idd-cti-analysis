@@ -33,7 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const idx = eventSelect.value;
         if (idx === "") return;
         
-        const event = currentEvents[idx];
+        const event = { ...currentEvents[idx] };
+        const trueLabel = event.true_label;
+        delete event.true_label;
+        
         setLoading(analyzeBtn, true);
         
         fetch('/api/analyze', {
@@ -44,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(res => res.json())
         .then(alert => {
             currentAlert = alert;
-            renderAlert(alert);
+            renderAlert(alert, trueLabel);
             alertPanel.classList.remove('hidden');
             reportPanel.classList.add('hidden');
         })
@@ -75,11 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .finally(() => setLoading(generateBtn, false));
     });
 
-    function renderAlert(alert) {
+    function renderAlert(alert, trueLabel) {
         // Basic info
         document.getElementById('threatBadge').textContent = alert.predicted_threat_class.toUpperCase();
-        document.getElementById('trueBadge').textContent = alert.true_threat_class.toUpperCase();
-        document.getElementById('reportTrueLabel').textContent = alert.true_threat_class.toUpperCase();
+        document.getElementById('trueBadge').textContent = trueLabel.toUpperCase();
         document.getElementById('targetComponent').textContent = alert.affected_network_component;
         
         // Confidence bar
@@ -120,6 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.querySelector('.shap-fill').style.width = `${Math.max(width, 15)}%`;
             }, 100);
         });
+        
+        // Display JSON structured alert
+        document.getElementById('jsonAlertContent').textContent = JSON.stringify(alert, null, 2);
     }
 
     function setLoading(btn, isLoading) {

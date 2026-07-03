@@ -92,6 +92,14 @@ This log tracks all agent sessions, features completed, and verification outcome
   - Selected `data/incident_report_dos.md` as the sample LLM incident report submission.
 - **Status:** Complete and verified.
 
+### Session 10: 2026-07-03T19:10Z
+- **Objective:** F-06 Enhancements: UI adjustments and strict true label isolation.
+- **Accomplishments:**
+  - Added a dedicated JSON view in the UI to explicitly showcase the generated structured CTI alert.
+  - Updated `script.js` and `app.py` to completely strip `true_threat_class` from the event payload *before* hitting the `/api/analyze` endpoint. This guarantees the backend LLM pipeline never processes the ground truth label.
+  - Removed redundant visual displays of the ground truth label in the generated report panel.
+- **Status:** Complete and verified.
+
 ---
 
 ## Next Steps

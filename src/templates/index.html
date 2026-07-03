@@ -64,7 +64,12 @@
                         </div>
                     </div>
 
-                    <button id="generateBtn" class="secondary-btn">
+                    <div class="json-alert-view" style="margin-top: 1rem;">
+                        <h3>Structured CTI Alert (JSON)</h3>
+                        <pre id="jsonAlertContent" style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 8px; font-size: 0.75rem; overflow-x: auto; color: #a5b4fc; border: 1px solid rgba(255, 255, 255, 0.1);"></pre>
+                    </div>
+
+                    <button id="generateBtn" class="secondary-btn" style="margin-top: 1rem;">
                         <span class="btn-text">Generate CTI Report via LLM</span>
                         <span class="loader hidden"></span>
                     </button>
@@ -77,15 +82,6 @@
 
             <section class="glass-panel report-panel hidden" id="reportPanel">
                 <h2>3. Explanation-Led Incident Report</h2>
-                <div style="background: rgba(15, 23, 42, 0.4); padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border); margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
-                    <div>
-                        <strong>Ground Truth Label:</strong> <span id="reportTrueLabel" style="font-weight: 700; text-transform: uppercase; color: var(--secondary);">--</span>
-                    </div>
-                    <div style="color: var(--text-muted); font-size: 0.8rem; display: flex; align-items: center; gap: 0.25rem;">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--secondary);"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                        <span>Verified: True label was not sent to LLM analysis.</span>
-                    </div>
-                </div>
                 <div id="reportContent" class="markdown-body">
                     <!-- Injected via JS -->
                 </div>
