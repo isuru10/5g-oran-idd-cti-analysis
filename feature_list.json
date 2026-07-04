@@ -97,7 +97,8 @@
       "status": "completed",
       "last_updated": "2026-07-03",
       "evidence": [
-        "report.md"
+        "report/report.md",
+        "report/report.docx"
       ]
     }
   ]
