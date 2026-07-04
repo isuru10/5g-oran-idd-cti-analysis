@@ -152,7 +152,7 @@
       "id": "F-12",
       "name": "Final Project Report and Word Document Update",
       "description": "Revise the final Markdown report and compile it into a Word document (report.docx) reflecting all architectural upgrades, chat integration, and a detailed confusion matrix explanation on commonly misclassified events.",
-      "status": "pending",
+      "status": "completed",
       "last_updated": "2026-07-04",
       "evidence": [
         "report/report.md",
