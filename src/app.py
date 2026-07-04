@@ -8,7 +8,7 @@ import numpy as np
 import shap
 import joblib
 from datetime import datetime
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template, Response
 
 # Mapping of threat classes to target O-RAN architecture components
 COMPONENT_MAPPING = {
@@ -231,21 +231,27 @@ def generate_report():
     data = {
         "model": model,
         "prompt": prompt,
-        "stream": False,
+        "stream": True,
         "options": {
             "temperature": 0.2
         }
     }
     
-    headers = {"Content-Type": "application/json"}
-    req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
-    try:
-        with urllib.request.urlopen(req, timeout=180) as response:
-            res_body = response.read().decode('utf-8')
-            res_json = json.loads(res_body)
-            return jsonify({"report": res_json.get('response', '')})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    def generate():
+        headers = {"Content-Type": "application/json"}
+        req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=180) as response:
+                for line in response:
+                    if line:
+                        line_decoded = line.decode('utf-8')
+                        chunk = json.loads(line_decoded)
+                        response_text = chunk.get('response', '')
+                        yield response_text
+        except Exception as e:
+            yield f"\n\nError generating streaming report: {str(e)}"
+            
+    return Response(generate(), mimetype='text/plain')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

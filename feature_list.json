@@ -128,8 +128,8 @@
     {
       "id": "F-10",
       "name": "LLM Report Streaming Response",
-      "description": "Enable chunk-by-chunk streaming of the generated threat intelligence report to the dashboard for improved user experience and responsiveness.",
-      "status": "pending",
+      "description": "Implement chunked streaming of LLM reports to the dashboard to reduce perceived latency and provide a real-time typing effect.",
+      "status": "completed",
       "last_updated": "2026-07-04",
       "evidence": [
         "src/app.py",

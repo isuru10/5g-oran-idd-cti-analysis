@@ -13,11 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentAlert = null;
     let selectedEventIdx = null;
     let cachedReports = { tldr: null, detailed: null };
+    let activeStreamController = null;
 
     function loadEvents() {
         setLoading(refreshBtn, true);
         analyzeBtn.disabled = true;
         selectedEventIdx = null;
+        if (activeStreamController) activeStreamController.abort();
         cachedReports = { tldr: null, detailed: null };
         alertPanel.classList.add('hidden');
         reportPanel.classList.add('hidden');
@@ -63,6 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         alertPanel.classList.add('hidden');
                         reportPanel.classList.add('hidden');
+                        if (activeStreamController) activeStreamController.abort();
                         cachedReports = { tldr: null, detailed: null };
                     });
                     
@@ -113,41 +116,116 @@ document.addEventListener('DOMContentLoaded', () => {
         .finally(() => setLoading(analyzeBtn, false));
     });
 
-    // Generate Report
-    generateBtn.addEventListener('click', () => {
+    async function streamReport(mode) {
         if (!currentAlert) return;
-        setLoading(generateBtn, true);
         
-        cachedReports = { tldr: null, detailed: null };
+        if (activeStreamController) {
+            activeStreamController.abort();
+        }
+        activeStreamController = new AbortController();
+        const signal = activeStreamController.signal;
         
-        fetch('/api/generate_report', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ alert: currentAlert, mode: 'tldr' })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.error) {
-                document.getElementById('reportContent').innerHTML = `<p style="color:var(--danger)">Error: ${data.error}</p>`;
-            } else {
-                cachedReports.tldr = data.report;
-                document.getElementById('reportContent').innerHTML = marked.parse(data.report);
+        const reportContentDiv = document.getElementById('reportContent');
+        reportContentDiv.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2rem;">Generating ${mode === 'tldr' ? 'executive TLDR' : 'detailed CTI report'} (running local model)...</p>`;
+        
+        if (mode === 'tldr') {
+            setLoading(generateBtn, true);
+        } else {
+            const tabText = tabDetailed.querySelector('.tab-text');
+            const tabLoader = tabDetailed.querySelector('.tab-loader');
+            if (tabText && tabLoader) {
+                tabText.classList.add('hidden');
+                tabLoader.classList.remove('hidden');
+            }
+        }
+        
+        try {
+            const response = await fetch('/api/generate_report', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ alert: currentAlert, mode: mode }),
+                signal: signal
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let receivedText = '';
+            
+            reportContentDiv.innerHTML = '';
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
                 
+                const chunkText = decoder.decode(value, { stream: true });
+                receivedText += chunkText;
+                
+                if ((mode === 'tldr' && tabTldr.classList.contains('active')) || 
+                    (mode === 'detailed' && tabDetailed.classList.contains('active'))) {
+                    reportContentDiv.innerHTML = marked.parse(receivedText);
+                }
+            }
+            
+            cachedReports[mode] = receivedText;
+            
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                console.log(`Stream generation for ${mode} was aborted.`);
+                return;
+            }
+            console.error(err);
+            reportContentDiv.innerHTML = `<p style="color:var(--danger)">Error: ${err.message || err}</p>`;
+            if (mode === 'detailed') {
                 tabTldr.classList.add('active');
                 tabDetailed.classList.remove('active');
+                if (cachedReports.tldr) {
+                    reportContentDiv.innerHTML = marked.parse(cachedReports.tldr);
+                }
             }
-            reportPanel.classList.remove('hidden');
-        })
-        .catch(err => console.error(err))
-        .finally(() => setLoading(generateBtn, false));
+        } finally {
+            if (mode === 'tldr') {
+                setLoading(generateBtn, false);
+            } else {
+                const tabText = tabDetailed.querySelector('.tab-text');
+                const tabLoader = tabDetailed.querySelector('.tab-loader');
+                if (tabText && tabLoader) {
+                    tabText.classList.remove('hidden');
+                    tabLoader.classList.add('hidden');
+                }
+            }
+            activeStreamController = null;
+        }
+    }
+
+    // Generate Report
+    generateBtn.addEventListener('click', () => {
+        cachedReports = { tldr: null, detailed: null };
+        tabTldr.classList.add('active');
+        tabDetailed.classList.remove('active');
+        reportPanel.classList.remove('hidden');
+        streamReport('tldr');
     });
 
     // Tab Listeners
     tabTldr.addEventListener('click', () => {
-        if (!cachedReports.tldr) return;
+        if (tabTldr.classList.contains('active')) return;
+        
         tabTldr.classList.add('active');
         tabDetailed.classList.remove('active');
-        document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.tldr);
+        
+        if (activeStreamController) {
+            activeStreamController.abort();
+        }
+        
+        if (cachedReports.tldr) {
+            document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.tldr);
+        } else {
+            streamReport('tldr');
+        }
     });
 
     tabDetailed.addEventListener('click', () => {
@@ -156,52 +234,15 @@ document.addEventListener('DOMContentLoaded', () => {
         tabTldr.classList.remove('active');
         tabDetailed.classList.add('active');
         
-        if (cachedReports.detailed) {
-            document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.detailed);
-            return;
+        if (activeStreamController) {
+            activeStreamController.abort();
         }
         
-        const tabText = tabDetailed.querySelector('.tab-text');
-        const tabLoader = tabDetailed.querySelector('.tab-loader');
-        
-        tabText.classList.add('hidden');
-        tabLoader.classList.remove('hidden');
-        document.getElementById('reportContent').innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2rem;">Generating detailed CTI report (running local model)...</p>`;
-        
-        fetch('/api/generate_report', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ alert: currentAlert, mode: 'detailed' })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.error) {
-                document.getElementById('reportContent').innerHTML = `<p style="color:var(--danger)">Error: ${data.error}</p>`;
-                tabTldr.classList.add('active');
-                tabDetailed.classList.remove('active');
-                if (cachedReports.tldr) {
-                    document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.tldr);
-                }
-            } else {
-                cachedReports.detailed = data.report;
-                if (tabDetailed.classList.contains('active')) {
-                    document.getElementById('reportContent').innerHTML = marked.parse(data.report);
-                }
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById('reportContent').innerHTML = `<p style="color:var(--danger)">Failed to generate detailed report.</p>`;
-            tabTldr.classList.add('active');
-            tabDetailed.classList.remove('active');
-            if (cachedReports.tldr) {
-                document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.tldr);
-            }
-        })
-        .finally(() => {
-            tabText.classList.remove('hidden');
-            tabLoader.classList.add('hidden');
-        });
+        if (cachedReports.detailed) {
+            document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.detailed);
+        } else {
+            streamReport('detailed');
+        }
     });
 
     function renderAlert(alert, trueLabel) {
