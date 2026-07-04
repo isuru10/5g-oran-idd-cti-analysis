@@ -253,5 +253,66 @@ def generate_report():
             
     return Response(generate(), mimetype='text/plain')
 
+def build_chat_prompt(alert_json, history_list):
+    alert_str = json.dumps(alert_json, indent=2)
+    
+    history_str = ""
+    for msg in history_list:
+        role = "User" if msg.get('role') == 'user' else "Assistant"
+        history_str += f"{role}: {msg.get('content', '')}\n"
+        
+    prompt = f"""[System Instruction]
+You are a Lead Cyber Threat Intelligence (CTI) analyst specializing in 5G Open RAN (O-RAN) security.
+The user (a security analyst) is asking questions about the active intrusion detection alert and SHAP explanation data.
+
+=== ACTIVE INCIDENT DATA (GROUND TRUTH CONTEXT) ===
+{alert_str}
+=== END OF CONTEXT ===
+
+Strictly adhere to the following rules:
+1. Answer the user's questions based ONLY on the provided incident data, network observations, and SHAP contributions.
+2. Do NOT invent indicators, IP addresses, domains, or network facts that are not present in the alert.
+3. If the user asks about topics completely unrelated to this incident (e.g. general programming, recipe instructions, general news, or other systems), you MUST politely decline: "I can only answer questions related to the current threat incident."
+4. Keep responses professional, concise, and focused on cybersecurity analysis.
+
+=== CONVERSATION HISTORY ===
+{history_str}
+"""
+    return prompt
+
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    alert = request.json.get('alert', {})
+    history = request.json.get('history', [])
+    prompt = build_chat_prompt(alert, history)
+    
+    model = "gemma3:4b-cloud"
+    host = "http://localhost:11434"
+    url = f"{host}/api/generate"
+    data = {
+        "model": model,
+        "prompt": prompt,
+        "stream": True,
+        "options": {
+            "temperature": 0.2
+        }
+    }
+    
+    def generate():
+        headers = {"Content-Type": "application/json"}
+        req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=180) as response:
+                for line in response:
+                    if line:
+                        line_decoded = line.decode('utf-8')
+                        chunk = json.loads(line_decoded)
+                        response_text = chunk.get('response', '')
+                        yield response_text
+        except Exception as e:
+            yield f"\n\nError in chat assistant response: {str(e)}"
+            
+    return Response(generate(), mimetype='text/plain')
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

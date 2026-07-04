@@ -140,7 +140,7 @@
       "id": "F-11",
       "name": "Context-Constrained Interactive LLM Chat",
       "description": "Integrate an interactive chat pane in the report panel allowing users to query the LLM about the incident, strictly bounded by the alert and SHAP context.",
-      "status": "pending",
+      "status": "completed",
       "last_updated": "2026-07-04",
       "evidence": [
         "src/templates/index.html",

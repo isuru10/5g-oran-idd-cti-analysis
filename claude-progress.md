@@ -6,7 +6,7 @@ This log tracks all agent sessions, features completed, and verification outcome
 
 ## Active Status
 - **Current Phase:** Advanced Dashboard Enhancements
-- **Active Feature:** Context-Constrained Interactive LLM Chat (F-11)
+- **Active Feature:** Final Project Report and Word Document Update (F-12)
 - **Status:** Pending
 
 ---
@@ -166,8 +166,17 @@ This log tracks all agent sessions, features completed, and verification outcome
   - Verified chunked transfer encoding and streaming output on active connections.
 - **Status:** Complete and verified.
 
+### Session 19: 2026-07-04T15:30Z
+- **Objective:** F-11: Context-Constrained Interactive LLM Chat.
+- **Accomplishments:**
+  - Implemented `/api/chat` streaming endpoint in `src/app.py` with system instructions restricting responses to the active alert's JSON context and SHAP contributions.
+  - Implemented client-side message parsing (`marked.parse()`), conversation history management (`chatHistory`), and DOM rendering with scrolling effects in `src/static/script.js`.
+  - Added CSS classes in `src/static/style.css` for the dark glassmorphic chat bubbles, custom scrollbars, and pulsing loading bubbles.
+  - Added a `.chat-container` layout block inside `#reportPanel` in `src/templates/index.html`.
+  - Tested incident-bounded queries and out-of-context requests (e.g. baking cookies), confirming safety filters work exactly as required.
+- **Status:** Complete and verified.
+
 ---
 
 ## Next Steps
-- F-11: Implement context-constrained interactive chat pane.
 - F-12: Update final report documents to reflect all upgrades, chat integration, and confusion matrix explanation on commonly misclassified events.

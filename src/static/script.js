@@ -14,6 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedEventIdx = null;
     let cachedReports = { tldr: null, detailed: null };
     let activeStreamController = null;
+    let chatHistory = [];
+
+    function resetChat() {
+        chatHistory = [];
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages) {
+            chatMessages.innerHTML = `
+                <div class="chat-message assistant">
+                    Hello! I am your 5G O-RAN CTI Analyst assistant. Ask me anything about this incident, target components, or the contributing SHAP features.
+                </div>
+            `;
+        }
+    }
 
     function loadEvents() {
         setLoading(refreshBtn, true);
@@ -21,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedEventIdx = null;
         if (activeStreamController) activeStreamController.abort();
         cachedReports = { tldr: null, detailed: null };
+        resetChat();
         alertPanel.classList.add('hidden');
         reportPanel.classList.add('hidden');
         
@@ -67,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         reportPanel.classList.add('hidden');
                         if (activeStreamController) activeStreamController.abort();
                         cachedReports = { tldr: null, detailed: null };
+                        resetChat();
                     });
                     
                     eventTableBody.appendChild(row);
@@ -204,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Generate Report
     generateBtn.addEventListener('click', () => {
         cachedReports = { tldr: null, detailed: null };
+        resetChat();
         tabTldr.classList.add('active');
         tabDetailed.classList.remove('active');
         reportPanel.classList.remove('hidden');
@@ -293,6 +309,95 @@ document.addEventListener('DOMContentLoaded', () => {
         // Display JSON structured alert
         document.getElementById('jsonAlertContent').textContent = JSON.stringify(alert, null, 2);
     }
+
+    // Chat functionality
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const chatSendBtn = document.getElementById('chatSendBtn');
+
+    async function sendChatMessage() {
+        const text = chatInput.value.trim();
+        if (!text || !currentAlert) return;
+
+        // Add user message to UI
+        appendChatMessage('user', text);
+        chatInput.value = '';
+
+        // Add user message to local history
+        chatHistory.push({ role: 'user', content: text });
+
+        // Disable input and send button
+        chatInput.disabled = true;
+        chatSendBtn.disabled = true;
+
+        // Append assistant loading message bubble with pulsing indicator
+        const assistantBubble = document.createElement('div');
+        assistantBubble.className = 'chat-message assistant';
+        assistantBubble.innerHTML = `
+            <span class="chat-pulse"></span>
+            <span class="chat-pulse"></span>
+            <span class="chat-pulse"></span>
+        `;
+        chatMessages.appendChild(assistantBubble);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ alert: currentAlert, history: chatHistory })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let receivedText = '';
+
+            // Clear parsing pulse indicator
+            assistantBubble.innerHTML = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                const chunkText = decoder.decode(value, { stream: true });
+                receivedText += chunkText;
+
+                // Render streaming response as HTML/Markdown
+                assistantBubble.innerHTML = marked.parse(receivedText);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Save assistant message to local history
+            chatHistory.push({ role: 'assistant', content: receivedText });
+
+        } catch (err) {
+            console.error(err);
+            assistantBubble.innerHTML = `<span style="color: var(--danger)">Error: ${err.message || err}</span>`;
+        } finally {
+            chatInput.disabled = false;
+            chatSendBtn.disabled = false;
+            chatInput.focus();
+        }
+    }
+
+    function appendChatMessage(role, content) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `chat-message ${role}`;
+        msgDiv.textContent = content;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    chatSendBtn.addEventListener('click', sendChatMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendChatMessage();
+        }
+    });
 
     function setLoading(btn, isLoading) {
         const text = btn.querySelector('.btn-text');
