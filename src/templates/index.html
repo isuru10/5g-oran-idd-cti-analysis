@@ -91,7 +91,7 @@
                     </div>
 
                     <button id="generateBtn" class="secondary-btn" style="margin-top: 1rem;">
-                        <span class="btn-text">Generate CTI Report via LLM</span>
+                        <span class="btn-text">Generate CTI Report</span>
                         <span class="loader hidden"></span>
                     </button>
                     <div style="margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
@@ -102,7 +102,16 @@
             </section>
 
             <section class="glass-panel report-panel hidden" id="reportPanel">
-                <h2>3. Explanation-Led Incident Report</h2>
+                <div class="report-header">
+                    <h2>3. Incident Analysis & CTI Report</h2>
+                    <div class="report-tabs">
+                        <button id="tabTldr" class="tab-btn active">⚡ Executive TLDR</button>
+                        <button id="tabDetailed" class="tab-btn">
+                            <span class="tab-text">📋 Full CTI Analysis</span>
+                            <span class="tab-loader hidden"></span>
+                        </button>
+                    </div>
+                </div>
                 <div id="reportContent" class="markdown-body">
                     <!-- Injected via JS -->
                 </div>

@@ -117,7 +117,7 @@
       "id": "F-09",
       "name": "Two-Tier LLM Analysis (TLDR & In-Depth)",
       "description": "Configure the LLM enrichment process to return a simplified explainability-focused TLDR, with a button to toggle a comprehensive in-depth analysis.",
-      "status": "pending",
+      "status": "completed",
       "last_updated": "2026-07-04",
       "evidence": [
         "src/app.py",

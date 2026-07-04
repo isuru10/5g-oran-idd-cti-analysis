@@ -40,7 +40,7 @@ target_mapping = joblib.load(os.path.join(models_dir, "target_mapping.joblib"))
 # Initialize TreeExplainer
 explainer = shap.TreeExplainer(rf_model)
 
-def build_shap_prompt(alert_json):
+def build_detailed_prompt(alert_json):
     alert_str = json.dumps(alert_json, indent=2)
     prompt = f"""[System Instruction]
 You are a Lead Cyber Threat Intelligence (CTI) analyst specializing in 5G Open RAN (O-RAN) security.
@@ -66,6 +66,30 @@ Please provide the incident report containing:
 6. **Immediate Mitigation & Response**: Actionable containment steps **justified by the SHAP feature findings**.
 7. **Long-Term Countermeasures**: Hardening steps or architectural improvements.
 8. **Human Review Required**: YES or NO, with clear justification.
+"""
+    return prompt
+
+def build_tldr_prompt(alert_json):
+    alert_str = json.dumps(alert_json, indent=2)
+    prompt = f"""[System Instruction]
+You are a Lead Cyber Threat Intelligence (CTI) analyst specializing in 5G Open RAN (O-RAN) security.
+Analyze the following structured intrusion detection alert and generate a highly concise, explainability-focused executive TLDR summary.
+
+Strictly adhere to the following rules:
+1. Do NOT invent indicators, IP addresses, domains, or network facts that are not present in the alert.
+2. Be extremely concise. Keep the summary under 200 words / 3 brief paragraphs.
+3. Highlight the predicted threat class, the affected 5G O-RAN component, and the top contributing SHAP feature.
+4. List the single most critical immediate mitigation action.
+5. Use clean Markdown structure.
+
+=== STRUCTURED DETECTOR ALERT WITH SHAP EVIDENCE ===
+{alert_str}
+=== END OF ALERT ===
+
+Please provide:
+- **Incident Executive Summary & Contextualized Threat Analysis**: A brief explanation of the threat, the affected O-RAN component ({alert_json.get('affected_network_component')}), and the specific architectural implications for the 5G network.
+- **Why the Model Flagged It (SHAP Evidence)**: A brief explanation of the primary contributing SHAP features justifying this prediction.
+- **Immediate Primary Mitigation**: One clear immediate containment step.
 """
     return prompt
 
@@ -194,7 +218,12 @@ def analyze():
 @app.route('/api/generate_report', methods=['POST'])
 def generate_report():
     alert = request.json.get('alert', {})
-    prompt = build_shap_prompt(alert)
+    mode = request.json.get('mode', 'tldr')
+    
+    if mode == 'detailed':
+        prompt = build_detailed_prompt(alert)
+    else:
+        prompt = build_tldr_prompt(alert)
     
     model = "gemma3:4b-cloud"
     host = "http://localhost:11434"

@@ -6,15 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const alertPanel = document.getElementById('alertPanel');
     const reportPanel = document.getElementById('reportPanel');
+    const tabTldr = document.getElementById('tabTldr');
+    const tabDetailed = document.getElementById('tabDetailed');
     
     let currentEvents = [];
     let currentAlert = null;
     let selectedEventIdx = null;
+    let cachedReports = { tldr: null, detailed: null };
 
     function loadEvents() {
         setLoading(refreshBtn, true);
         analyzeBtn.disabled = true;
         selectedEventIdx = null;
+        cachedReports = { tldr: null, detailed: null };
         alertPanel.classList.add('hidden');
         reportPanel.classList.add('hidden');
         
@@ -59,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         alertPanel.classList.add('hidden');
                         reportPanel.classList.add('hidden');
+                        cachedReports = { tldr: null, detailed: null };
                     });
                     
                     eventTableBody.appendChild(row);
@@ -113,22 +118,90 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentAlert) return;
         setLoading(generateBtn, true);
         
+        cachedReports = { tldr: null, detailed: null };
+        
         fetch('/api/generate_report', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ alert: currentAlert })
+            body: JSON.stringify({ alert: currentAlert, mode: 'tldr' })
         })
         .then(res => res.json())
         .then(data => {
             if (data.error) {
                 document.getElementById('reportContent').innerHTML = `<p style="color:var(--danger)">Error: ${data.error}</p>`;
             } else {
+                cachedReports.tldr = data.report;
                 document.getElementById('reportContent').innerHTML = marked.parse(data.report);
+                
+                tabTldr.classList.add('active');
+                tabDetailed.classList.remove('active');
             }
             reportPanel.classList.remove('hidden');
         })
         .catch(err => console.error(err))
         .finally(() => setLoading(generateBtn, false));
+    });
+
+    // Tab Listeners
+    tabTldr.addEventListener('click', () => {
+        if (!cachedReports.tldr) return;
+        tabTldr.classList.add('active');
+        tabDetailed.classList.remove('active');
+        document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.tldr);
+    });
+
+    tabDetailed.addEventListener('click', () => {
+        if (tabDetailed.classList.contains('active')) return;
+        
+        tabTldr.classList.remove('active');
+        tabDetailed.classList.add('active');
+        
+        if (cachedReports.detailed) {
+            document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.detailed);
+            return;
+        }
+        
+        const tabText = tabDetailed.querySelector('.tab-text');
+        const tabLoader = tabDetailed.querySelector('.tab-loader');
+        
+        tabText.classList.add('hidden');
+        tabLoader.classList.remove('hidden');
+        document.getElementById('reportContent').innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 2rem;">Generating detailed CTI report (running local model)...</p>`;
+        
+        fetch('/api/generate_report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ alert: currentAlert, mode: 'detailed' })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                document.getElementById('reportContent').innerHTML = `<p style="color:var(--danger)">Error: ${data.error}</p>`;
+                tabTldr.classList.add('active');
+                tabDetailed.classList.remove('active');
+                if (cachedReports.tldr) {
+                    document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.tldr);
+                }
+            } else {
+                cachedReports.detailed = data.report;
+                if (tabDetailed.classList.contains('active')) {
+                    document.getElementById('reportContent').innerHTML = marked.parse(data.report);
+                }
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('reportContent').innerHTML = `<p style="color:var(--danger)">Failed to generate detailed report.</p>`;
+            tabTldr.classList.add('active');
+            tabDetailed.classList.remove('active');
+            if (cachedReports.tldr) {
+                document.getElementById('reportContent').innerHTML = marked.parse(cachedReports.tldr);
+            }
+        })
+        .finally(() => {
+            tabText.classList.remove('hidden');
+            tabLoader.classList.add('hidden');
+        });
     });
 
     function renderAlert(alert, trueLabel) {
