@@ -103,16 +103,6 @@
     },
     {
       "id": "F-08",
-      "name": "Confusion Matrix Misclassification Analysis",
-      "description": "Document and explain the commonly misclassified features in the confusion matrix inside exploratory_analysis.ipynb with detailed causal analysis.",
-      "status": "pending",
-      "last_updated": "2026-07-04",
-      "evidence": [
-        "src/exploratory_analysis.ipynb"
-      ]
-    },
-    {
-      "id": "F-09",
       "name": "Interactive Dashboard Event Selection Table",
       "description": "Replace the simple event selection dropdown with a dynamically refreshing interactive table that displays 5 random sample events per threat class.",
       "status": "pending",
@@ -124,7 +114,7 @@
       ]
     },
     {
-      "id": "F-10",
+      "id": "F-09",
       "name": "Two-Tier LLM Analysis (TLDR & In-Depth)",
       "description": "Configure the LLM enrichment process to return a simplified explainability-focused TLDR, with a button to toggle a comprehensive in-depth analysis.",
       "status": "pending",
@@ -136,7 +126,7 @@
       ]
     },
     {
-      "id": "F-11",
+      "id": "F-10",
       "name": "LLM Report Streaming Response",
       "description": "Enable chunk-by-chunk streaming of the generated threat intelligence report to the dashboard for improved user experience and responsiveness.",
       "status": "pending",
@@ -147,7 +137,7 @@
       ]
     },
     {
-      "id": "F-12",
+      "id": "F-11",
       "name": "Context-Constrained Interactive LLM Chat",
       "description": "Integrate an interactive chat pane in the report panel allowing users to query the LLM about the incident, strictly bounded by the alert and SHAP context.",
       "status": "pending",
@@ -159,9 +149,9 @@
       ]
     },
     {
-      "id": "F-13",
+      "id": "F-12",
       "name": "Final Project Report and Word Document Update",
-      "description": "Revise the final Markdown report and compile it into a Word document (report.docx) reflecting all architectural upgrades, misclassification analysis, and chat integration.",
+      "description": "Revise the final Markdown report and compile it into a Word document (report.docx) reflecting all architectural upgrades, chat integration, and a detailed confusion matrix explanation on commonly misclassified events.",
       "status": "pending",
       "last_updated": "2026-07-04",
       "evidence": [

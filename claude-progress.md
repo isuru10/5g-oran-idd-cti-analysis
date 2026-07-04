@@ -5,9 +5,9 @@ This log tracks all agent sessions, features completed, and verification outcome
 ---
 
 ## Active Status
-- **Current Phase:** Advanced Dashboard Enhancements & Analytical Analysis
-- **Active Feature:** Feature Registration and Misclassification Analysis (F-08)
-- **Status:** In Progress (Features registered, confusion matrix misclassifications documented)
+- **Current Phase:** Advanced Dashboard Enhancements
+- **Active Feature:** Interactive Dashboard Event Selection Table (F-08)
+- **Status:** Pending
 
 ---
 
@@ -131,16 +131,16 @@ This log tracks all agent sessions, features completed, and verification outcome
 - **Status:** Complete and verified.
 
 ### Session 15: 2026-07-04T14:18Z
-- **Objective:** Register new analytical and dashboard features in the feature list.
+- **Objective:** Register new dashboard and report features in the feature list.
 - **Accomplishments:**
-  - Registered features F-08 through F-13 in `feature_list.json` covering the analytical upgrades, dashboard table selection, LLM report streaming, context-constrained interactive chat, and report compile updates.
-  - Documented confusion matrix misclassifications directly inside the `exploratory_analysis.ipynb` notebook.
+  - Registered features F-08 through F-12 in `feature_list.json` covering the dashboard table selection, LLM report streaming, context-constrained interactive chat, and report compile updates.
 - **Status:** Complete and verified.
 
 ---
 
 ## Next Steps
-- Implement the interactive table-based event selection with a refresh button in the dashboard frontend and backend.
-- Refactor the backend to support chunked streaming of the LLM output for reports.
-- Implement the context-constrained chat pane in the report panel.
-- Update the final report documents (Markdown and Word format) to reflect these modifications.
+- F-08: Implement the interactive table-based event selection with a refresh button in the dashboard.
+- F-09: Add Two-Tier LLM Analysis (TLDR & In-Depth).
+- F-10: Implement streaming LLM report responses.
+- F-11: Implement context-constrained interactive chat pane.
+- F-12: Update final report documents to reflect all upgrades, chat integration, and confusion matrix explanation on commonly misclassified events.
