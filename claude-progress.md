@@ -6,7 +6,7 @@ This log tracks all agent sessions, features completed, and verification outcome
 
 ## Active Status
 - **Current Phase:** Advanced Dashboard Enhancements
-- **Active Feature:** Interactive Dashboard Event Selection Table (F-08)
+- **Active Feature:** Two-Tier LLM Analysis (TLDR & In-Depth) (F-09)
 - **Status:** Pending
 
 ---
@@ -136,10 +136,19 @@ This log tracks all agent sessions, features completed, and verification outcome
   - Registered features F-08 through F-12 in `feature_list.json` covering the dashboard table selection, LLM report streaming, context-constrained interactive chat, and report compile updates.
 - **Status:** Complete and verified.
 
+### Session 16: 2026-07-04T14:45Z
+- **Objective:** F-08: Interactive Dashboard Event Selection Table.
+- **Accomplishments:**
+  - Refactored `/api/events` in `src/app.py` to sample 5 random events per threat class (covering all 6 classes: `benign`, `dos`, `ddos`, `probe`, `bruteforce`, `web`), returning 30 events total.
+  - Replaced the event select dropdown in `index.html` with a premium scrollable glassmorphic table.
+  - Created status-colored badge classes for threat classes and styled select row radio indicators in `style.css`.
+  - Updated `script.js` to render event rows, manage selection highlights, toggle Analyze button state, and implement table content refreshing.
+  - Verified API outputs and model integration.
+- **Status:** Complete and verified.
+
 ---
 
 ## Next Steps
-- F-08: Implement the interactive table-based event selection with a refresh button in the dashboard.
 - F-09: Add Two-Tier LLM Analysis (TLDR & In-Depth).
 - F-10: Implement streaming LLM report responses.
 - F-11: Implement context-constrained interactive chat pane.

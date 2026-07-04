@@ -20,13 +20,34 @@
 
         <main class="dashboard">
             <section class="glass-panel control-panel">
-                <h2>1. Select Network Event</h2>
-                <div class="custom-select">
-                    <select id="eventSelect">
-                        <option value="" disabled selected>Loading test events...</option>
-                    </select>
+                <div class="control-header">
+                    <h2>1. Select Network Event</h2>
+                    <button id="refreshBtn" class="refresh-btn">
+                        <span class="btn-text">🔄 Refresh Samples</span>
+                        <span class="loader hidden"></span>
+                    </button>
                 </div>
-                <button id="analyzeBtn" class="primary-btn" disabled>
+                <div class="table-container">
+                    <table class="event-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"></th>
+                                <th>Predicted</th>
+                                <th>True Label</th>
+                                <th>Protocol</th>
+                                <th>Service</th>
+                                <th>Src Bytes</th>
+                                <th>Dst Bytes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventTableBody">
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading network events...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button id="analyzeBtn" class="primary-btn" disabled style="margin-top: 1.5rem;">
                     <span class="btn-text">Analyze Threat</span>
                     <span class="loader hidden"></span>
                 </button>

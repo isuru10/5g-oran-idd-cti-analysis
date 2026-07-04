@@ -105,7 +105,7 @@
       "id": "F-08",
       "name": "Interactive Dashboard Event Selection Table",
       "description": "Replace the simple event selection dropdown with a dynamically refreshing interactive table that displays 5 random sample events per threat class.",
-      "status": "pending",
+      "status": "completed",
       "last_updated": "2026-07-04",
       "evidence": [
         "src/templates/index.html",

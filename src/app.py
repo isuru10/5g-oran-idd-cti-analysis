@@ -79,20 +79,18 @@ def get_events():
     csv_path = os.path.join(data_dir, "cti_test_events.csv")
     df_events = pd.read_csv(csv_path)
     
-    # Select 5 diverse events (one from each class)
-    grouped = df_events.groupby('predicted_label')
-    target_classes = ['dos', 'ddos', 'probe', 'bruteforce', 'web']
+    target_classes = ['benign', 'bruteforce', 'ddos', 'dos', 'probe', 'web']
     selected_events = []
     
     for cls in target_classes:
-        if cls in grouped.groups:
-            row = grouped.get_group(cls).iloc[0]
-            # Convert row to dict
-            row_dict = row.to_dict()
-            # Replace NaNs with None
-            row_dict = {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
-            row_dict['_id'] = f"{cls}-event"
-            selected_events.append(row_dict)
+        cls_df = df_events[df_events['predicted_label'] == cls]
+        if not cls_df.empty:
+            sampled_df = cls_df.sample(n=min(len(cls_df), 5))
+            for idx, row in sampled_df.iterrows():
+                row_dict = row.to_dict()
+                row_dict = {k: (None if pd.isna(v) else v) for k, v in row_dict.items()}
+                row_dict['_id'] = f"{cls}-event-{idx}"
+                selected_events.append(row_dict)
             
     return jsonify(selected_events)
 

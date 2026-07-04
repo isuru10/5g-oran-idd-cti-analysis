@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const eventSelect = document.getElementById('eventSelect');
+    const eventTableBody = document.getElementById('eventTableBody');
+    const refreshBtn = document.getElementById('refreshBtn');
     const analyzeBtn = document.getElementById('analyzeBtn');
     const generateBtn = document.getElementById('generateBtn');
     
@@ -8,34 +9,86 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let currentEvents = [];
     let currentAlert = null;
+    let selectedEventIdx = null;
 
-    // Load events
-    fetch('/api/events')
-        .then(res => res.json())
-        .then(events => {
-            currentEvents = events;
-            eventSelect.innerHTML = '<option value="" disabled selected>Select a network event...</option>';
-            events.forEach((evt, idx) => {
-                const opt = document.createElement('option');
-                opt.value = idx;
-                opt.textContent = `Event [Pred: ${evt.predicted_label.toUpperCase()}, True: ${evt.true_label.toUpperCase()}] - ${evt.proto} / ${evt.service} / ${evt.src_bytes} bytes`;
-                eventSelect.appendChild(opt);
-            });
-            eventSelect.addEventListener('change', () => {
-                analyzeBtn.disabled = false;
-                alertPanel.classList.add('hidden');
-                reportPanel.classList.add('hidden');
-            });
-        });
+    function loadEvents() {
+        setLoading(refreshBtn, true);
+        analyzeBtn.disabled = true;
+        selectedEventIdx = null;
+        alertPanel.classList.add('hidden');
+        reportPanel.classList.add('hidden');
+        
+        eventTableBody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">Loading network events...</td>
+            </tr>
+        `;
+        
+        fetch('/api/events')
+            .then(res => res.json())
+            .then(events => {
+                currentEvents = events;
+                eventTableBody.innerHTML = '';
+                
+                events.forEach((evt, idx) => {
+                    const row = document.createElement('tr');
+                    row.dataset.idx = idx;
+                    
+                    const predBadge = `<span class="badge ${evt.predicted_label}">${evt.predicted_label}</span>`;
+                    const trueBadge = `<span class="badge ${evt.true_label}">${evt.true_label}</span>`;
+                    
+                    row.innerHTML = `
+                        <td style="text-align: center;"><span class="select-radio"></span></td>
+                        <td>${predBadge}</td>
+                        <td>${trueBadge}</td>
+                        <td><code>${evt.proto}</code></td>
+                        <td><code>${evt.service || 'none'}</code></td>
+                        <td>${evt.src_bytes.toLocaleString()}</td>
+                        <td>${evt.dst_bytes.toLocaleString()}</td>
+                    `;
+                    
+                    row.addEventListener('click', () => {
+                        const previouslySelected = eventTableBody.querySelector('tr.selected');
+                        if (previouslySelected) {
+                            previouslySelected.classList.remove('selected');
+                        }
+                        
+                        row.classList.add('selected');
+                        selectedEventIdx = idx;
+                        analyzeBtn.disabled = false;
+                        
+                        alertPanel.classList.add('hidden');
+                        reportPanel.classList.add('hidden');
+                    });
+                    
+                    eventTableBody.appendChild(row);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                eventTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: var(--danger); padding: 2rem;">Error loading events. Please try again.</td>
+                    </tr>
+                `;
+            })
+            .finally(() => setLoading(refreshBtn, false));
+    }
+
+    // Initial Load
+    loadEvents();
+
+    // Refresh Button Click
+    refreshBtn.addEventListener('click', loadEvents);
 
     // Analyze Threat
     analyzeBtn.addEventListener('click', () => {
-        const idx = eventSelect.value;
-        if (idx === "") return;
+        if (selectedEventIdx === null || selectedEventIdx === undefined) return;
         
-        const event = { ...currentEvents[idx] };
+        const event = { ...currentEvents[selectedEventIdx] };
         const trueLabel = event.true_label;
         delete event.true_label;
+        delete event._id;
         
         setLoading(analyzeBtn, true);
         
