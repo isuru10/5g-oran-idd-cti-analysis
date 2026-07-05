@@ -195,7 +195,14 @@ This log tracks all agent sessions, features completed, and verification outcome
   - Successfully regenerated `report/report.docx` ensuring the new layout complies with the strict 6-page limit and requested styling.
 - **Status:** Complete and verified.
 
+### Session 22: 2026-07-05T17:09Z
+- **Objective:** Add Ollama LLM installation and setup documentation to README.MD.
+- **Accomplishments:**
+  - Added step-by-step instructions in README.MD for installing Ollama (Linux/macOS/Windows), managing the service, and pulling the configured model (`gemma3:4b-cloud`).
+  - Clarified model usage context to prevent confusion with legacy configurations.
+- **Status:** Complete and verified.
+
 ---
 
 ## Project Completion
-All features F-01 through F-12 have been implemented and verified. The 5G O-RAN CTI pipeline is complete, and the final report has been optimized.
+All features F-01 through F-12 have been implemented and verified. The 5G O-RAN CTI pipeline is complete, the final report has been optimized, and installation instructions have been finalized.

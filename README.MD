@@ -54,10 +54,31 @@ To keep the repository lightweight, all large machine learning models (`*.joblib
    ```bash
    pip install -r requirements.txt
    ```
-2. **Run the Demonstration Dashboard:**
+
+2. **Ollama LLM Setup:**
+   To run the LLM-assisted threat intelligence enrichment pipeline, you must install Ollama and register the local model.
+   - **Install Ollama:**
+     * **Linux:** Run the official install script:
+       ```bash
+       curl -fsSL https://ollama.com/install.sh | sh
+       ```
+     * **macOS / Windows:** Download and install from [Ollama's website](https://ollama.com).
+   - **Start the Service:**
+     Ensure the Ollama daemon is running:
+     ```bash
+     sudo systemctl start ollama
+     ```
+   - **Pull the Model:**
+     Pull the configured `gemma3:4b-cloud` model:
+     ```bash
+     ollama pull gemma3:4b-cloud
+     ```
+
+3. **Run the Demonstration Dashboard:**
    Start the Flask web application to interact with the LLM-assisted threat detection pipeline:
    ```bash
    python src/app.py
    ```
-3. **Access the Interface:**
+
+4. **Access the Interface:**
    Open your browser and navigate to `http://127.0.0.1:5000`. From there, you can select simulated 5G test events, view the SHAP evidence, and generate the final contextualized incident report.
